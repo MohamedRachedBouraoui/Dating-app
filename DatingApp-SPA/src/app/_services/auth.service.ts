@@ -3,20 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { JwtService } from './jwt.service';
+import { environment } from 'src/environments/environment';
+import { HttpService } from './http.service';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = 'auth/';
+
   loggedInUserName: string;
 
-  constructor(private http: HttpClient,
+  constructor(private http: HttpService,
     private jwtService: JwtService) { }
 
   login(model: any) {
-    return this.http.post(this.baseUrl + 'login', model)
+    return this.http.post<any>(this.baseUrl + 'login', model)
       .pipe(
         map((response: any) => {
           if (response) {
@@ -27,7 +31,7 @@ export class AuthService {
   }
 
   register(model: any) {
-    return this.http.post(this.baseUrl + 'register', model);
+    return this.http.post<any>(this.baseUrl + 'register', model);
   }
 
   isLoggedIn(): boolean {

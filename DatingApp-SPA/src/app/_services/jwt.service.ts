@@ -34,3 +34,7 @@ export class JwtService {
     localStorage.removeItem('token');
   }
 }
+
+export function getToken(): any {
+  return localStorage.getItem('token');
+}
