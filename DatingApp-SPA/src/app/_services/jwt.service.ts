@@ -7,6 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class JwtService {
 
   static UNIQUE_NAME = 'unique_name';
+  static NAME_ID = 'nameid';
 
   get token(): any {
     return localStorage.getItem('token');

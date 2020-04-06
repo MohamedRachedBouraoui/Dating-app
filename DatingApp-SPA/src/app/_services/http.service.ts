@@ -14,12 +14,15 @@ export class HttpService {
   constructor(private httpClient: HttpClient) { }
 
   post<T>(url: string, data: any): Observable<T> {
-    return this.httpClient.post<any>(this.baseUrl + url, JSON.stringify(data));
+    return this.httpClient.post<any>(this.baseUrl + url, data);
   }
 
   get<T>(url: string): Observable<T> {
     return this.httpClient.get<T>(this.baseUrl + url);
   }
 
+  put<T>(url: string, data: T): Observable<T> {
+    return this.httpClient.put<T>(this.baseUrl + url, data);
+  }
 
 }

@@ -34,7 +34,7 @@
         >Welcome {{ loggedInUserName | titlecase }}</a
       >
       <div *dropdownMenu class="dropdown-menu mt-3">
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" [routerLink]="['/member/edit']">
           <i class="fa fa-user"></i>
           Edit Profile
         </a>
