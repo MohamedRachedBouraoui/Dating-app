@@ -12,3 +12,9 @@
   background-color: #fff;
   border-top: none;
 }
+
+.fa.fa-arrow-circle-right.ngx-gallery-icon-content,
+.fa.fa-arrow-circle-left.ngx-gallery-icon-content {
+  background: black !important ;
+  border-radius: 50px !important;
+}

@@ -2,3 +2,10 @@
 .dropdown-item {
   cursor: pointer;
 }
+
+.logged-in-user-photo {
+  width: 3em;
+  border-radius: 50px;
+  border: 2px solid white;
+  display: inline;
+}

@@ -9,6 +9,7 @@ import { JwtService } from './jwt.service';
 })
 export class HttpService {
 
+
   baseUrl = environment.apiUrl;
 
   constructor(private httpClient: HttpClient) { }
@@ -23,6 +24,10 @@ export class HttpService {
 
   put<T>(url: string, data: T): Observable<T> {
     return this.httpClient.put<T>(this.baseUrl + url, data);
+  }
+
+  delete<T>(url: string): Observable<any> {
+    return this.httpClient.delete<T>(this.baseUrl + url);
   }
 
 }

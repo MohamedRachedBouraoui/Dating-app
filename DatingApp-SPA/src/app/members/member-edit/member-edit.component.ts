@@ -4,6 +4,7 @@ import { User } from 'src/app/_models/user';
 import { NgForm } from '@angular/forms';
 import { UserService } from 'src/app/_services/user.service';
 import { JwtService } from 'src/app/_services/jwt.service';
+import { Photo } from 'src/app/_models/photo';
 
 @Component({
   selector: 'app-member-edit',
@@ -13,6 +14,8 @@ import { JwtService } from 'src/app/_services/jwt.service';
 export class MemberEditComponent extends BaseComponent implements OnInit {
 
   user: User;
+  userPhotoUrl: string;
+
   @ViewChild('editForm', { static: true }) editForm: NgForm;
 
   @HostListener('window:beforeunload', ['$event'])
@@ -31,6 +34,10 @@ export class MemberEditComponent extends BaseComponent implements OnInit {
     this.activatedRoute.data.subscribe(data => {
       this.user = data.user;
     });
+
+    this.authService.photoUrlSubjectBehavior.subscribe((url: string) => {
+      this.userPhotoUrl = url;
+    });
   }
   updateUser(): void {
     this.userService.updateUser(+this.jwtService.decodeTokenAndRetrieveInfo(JwtService.NAME_ID), this.user)
@@ -42,6 +49,10 @@ export class MemberEditComponent extends BaseComponent implements OnInit {
 
         this.alertify.error(error);
       });
+  }
 
+  updateMainPhoto(photoUrl: string): void {
+    this.user.photoUrl = photoUrl;
+    this.authService.changeMemeberPhoto(photoUrl);
   }
 }

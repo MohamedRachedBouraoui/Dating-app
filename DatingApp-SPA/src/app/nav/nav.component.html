@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" [routerLink]="['/']">Dating App</a>
+    <a class="navbar-brand" [routerLink]="['/']">Animes Fans</a>
 
     <ul class="navbar-nav mr-auto" *ngIf="isLoggedIn()">
       <li class="nav-item">
@@ -30,6 +30,11 @@
     </ul>
 
     <div *ngIf="isLoggedIn()" dropdown class="dropdown">
+      <img
+        [src]="photoUrl"
+        alt="user photo url"
+        class="logged-in-user-photo mr-1"
+      />
       <a class="dropdown-toggle text-light" dropdownToggle
         >Welcome {{ loggedInUserName | titlecase }}</a
       >

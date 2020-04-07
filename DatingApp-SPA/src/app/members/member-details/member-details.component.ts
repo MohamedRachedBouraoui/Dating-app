@@ -29,8 +29,9 @@ export class MemberDetailsComponent extends BaseComponent implements OnInit {
   setupGallery() {
     this.galleryOptions = [
       {
-        width: '500px',
-        height: '500px',
+        //height: 37.3em;
+        width: '100%',
+        height: '37.3em',
         imagePercent: 100,
         thumbnailsColumns: 4,
         imageAnimation: NgxGalleryAnimation.Slide,

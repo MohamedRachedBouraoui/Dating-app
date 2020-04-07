@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Z.EntityFramework.Plus;
 
 namespace DatingApp.API.Data
 {
@@ -17,7 +18,7 @@ namespace DatingApp.API.Data
 
         public async Task<User> Login(string userName, string password)
         {
-            var user = context.Users.FirstOrDefault(u => u.UserName == userName);
+            var user = context.Users.IncludeFilter(u => u.Photos.Where(p => p.IsMain)).FirstOrDefault(u => u.UserName == userName);
             if (user == null)
             {
                 return null;

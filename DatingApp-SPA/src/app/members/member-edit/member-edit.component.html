@@ -16,7 +16,7 @@
       <div class="card text-left">
         <img
           class="card-img-top img-thumbnail"
-          src="{{ user.photoUrl }}"
+          src="{{ userPhotoUrl }}"
           alt="{{ user.knownAs }}"
         />
         <div class="card-body">
@@ -45,7 +45,7 @@
               [disabled]="!editForm.dirty"
               form="editForm"
             >
-              <i class="fa fa-save" aria-hidden="true"></i> Save Changes
+              <i class="fa fa-save mr-1" aria-hidden="true"></i>Update
             </button>
           </div>
         </div>
@@ -102,7 +102,10 @@
             </form>
           </tab>
           <tab heading="Edit Photos">
-            <p>Photos edit here</p>
+            <app-photo-editor
+              [photos]="user.photos"
+              (mainPhotoUpdated)="updateMainPhoto($event)"
+            ></app-photo-editor>
           </tab>
         </tabset>
       </div>

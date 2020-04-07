@@ -6,13 +6,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { JwtModule } from '@auth0/angular-jwt';
+import { ErrorInterceptor } from './_interceptors/error-interceptor';
+import { NgxGalleryModule } from 'ngx-gallery-9';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
 import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
-import { ErrorInterceptor } from './_interceptors/error-interceptor';
-import { NgxGalleryModule } from 'ngx-gallery-9';
 
 import { environment } from 'src/environments/environment';
 import { CustomHttpHeadersInterceptor } from './_interceptors/custom-http-headers.interceptor';
@@ -27,6 +28,7 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 
 import { MemberDetailsComponent } from './members/member-details/member-details.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
     ErrorPageComponent,
     MemberCardComponent,
     MemberDetailsComponent,
-    MemberEditComponent
+    MemberEditComponent,
+    PhotoEditorComponent
 
   ],
   imports: [
@@ -59,6 +62,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
       }
     }),
     TabsModule.forRoot(),
+    FileUploadModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
