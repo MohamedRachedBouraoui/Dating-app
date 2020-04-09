@@ -31,6 +31,7 @@ import { MemberDetailsComponent } from './members/member-details/member-details.
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { RouterModule, ActivatedRoute } from 'dating-app-spa-win32-x64/resources/app/node_modules/@angular/router/router';
+import { TimeAgoPipe } from './_pipes/time-ago.pipe';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { RouterModule, ActivatedRoute } from 'dating-app-spa-win32-x64/resources
     MemberCardComponent,
     MemberDetailsComponent,
     MemberEditComponent,
-    PhotoEditorComponent
+    PhotoEditorComponent,
+    TimeAgoPipe
 
   ],
   imports: [
