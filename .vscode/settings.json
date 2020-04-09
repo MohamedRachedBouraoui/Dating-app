@@ -1,0 +1,22 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/bin": true,
+        "**/obj": true,
+        ".vscode": true,
+        "DatingApp-SPA/dating-app-spa-win32-x64": true,
+        "node_modules": true,
+        "DatingApp-SPA/node_modules": true,
+        "DatingApp.API/.vscode": true,
+        "DatingApp.API/.gitignore": true,
+        "**/*.csproj": true,
+        "DatingApp.API/DatingApp.API.csproj": true,
+        "DatingApp.API/*.csproj": true,
+        "DatingApp-SPA\\dist/*.*": true
+    },
+    "explorerExclude.backup": null
+}

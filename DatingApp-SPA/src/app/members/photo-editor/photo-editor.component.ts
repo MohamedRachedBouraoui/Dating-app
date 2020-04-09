@@ -50,7 +50,6 @@ export class PhotoEditorComponent extends BaseComponent implements OnInit {
 
         this.photos.find(p => p.isMain === true).isMain = false; // update the isMain  status for the old main photo
         newMainPhoto.isMain = true;
-        // this.mainPhotoUpdated.emit(newMainPhoto.url);
         this.authService.changeMemeberPhoto(newMainPhoto.url);
 
       }, error => {
@@ -117,6 +116,9 @@ export class PhotoEditorComponent extends BaseComponent implements OnInit {
           isMain: res.isMain
         };
         this.photos.push(photo);
+        if (photo.isMain) {
+          this.authService.changeMemeberPhoto(photo.url);
+        }
       }
     };
     // this.hasBaseDropZoneOver = false;

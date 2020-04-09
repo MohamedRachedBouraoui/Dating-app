@@ -12,6 +12,14 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
 export class MemberDetailsComponent extends BaseComponent implements OnInit {
 
   user: User;
+  get userPhotUrl(): string {
+
+    if (this.user.photoUrl === '') {
+      return '../../assets/unknown-user.png';
+    } else {
+      return this.user.photoUrl;
+    }
+  }
 
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
@@ -55,8 +63,9 @@ export class MemberDetailsComponent extends BaseComponent implements OnInit {
   }
 
   loadUser() {
+
     this.activatedRout.data.subscribe((data: any) => {
-      this.user = data.user;
+      this.user = data.user as User;
     }, error => {
       this.alertify.error(error);
     });

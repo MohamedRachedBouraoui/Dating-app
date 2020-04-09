@@ -19,7 +19,9 @@ export class AuthService {
   loggedInUserName: string;
   loggedInUser: User;
 
-  photoUrlSubjectBehavior = new BehaviorSubject<string>('../../assets/unknown-user.png');
+  readonly unknownUserPhoto = '../../assets/unknown-user.png';
+
+  photoUrlSubjectBehavior = new BehaviorSubject<string>(this.unknownUserPhoto);
   currentPhotoUrl = this.photoUrlSubjectBehavior.asObservable();
 
   constructor(private http: HttpService,
@@ -27,9 +29,12 @@ export class AuthService {
 
 
   changeMemeberPhoto(photoUrl: string): void {
+    if (photoUrl === undefined || photoUrl === null || photoUrl === '') {
+      photoUrl = this.unknownUserPhoto;
+    }
     this.photoUrlSubjectBehavior.next(photoUrl);
     this.getLoggedInUser().photoUrl = photoUrl;
-    debugger;
+
     localStorage.setItem('user', JSON.stringify(this.getLoggedInUser()));
   }
 

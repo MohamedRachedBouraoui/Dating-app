@@ -17,6 +17,7 @@ export class UserService {
   }
 
   getUser(userId: number): Observable<User> {
+    console.log("Logged Output: : UserService -> constructor -> userId", userId);
     return this.http.get<User>(this.baseUrl + userId);
   }
 

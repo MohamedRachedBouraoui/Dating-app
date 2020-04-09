@@ -1,7 +1,7 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -9,6 +9,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { ErrorInterceptor } from './_interceptors/error-interceptor';
 import { NgxGalleryModule } from 'ngx-gallery-9';
 import { FileUploadModule } from 'ng2-file-upload';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -29,6 +30,7 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailsComponent } from './members/member-details/member-details.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { RouterModule, ActivatedRoute } from 'dating-app-spa-win32-x64/resources/app/node_modules/@angular/router/router';
 
 @NgModule({
   declarations: [
@@ -49,9 +51,10 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule,
+    FormsModule, ReactiveFormsModule,
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     AppRoutingModule,
     NgxGalleryModule,
     JwtModule.forRoot({
@@ -71,5 +74,6 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
   bootstrap: [
     AppComponent
   ]
+
 })
 export class AppModule { }
