@@ -28,10 +28,22 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await datingRepository.GetUSers();
+            var currentUserId = GetCurrentUserId();
+            userParams.UserId = currentUserId;
+
+            var currentUserFromRepo = await datingRepository.GetUser(currentUserId);
+
+            if (string.IsNullOrWhiteSpace(userParams.Gender)) //filter with gender
+            {
+                userParams.Gender = currentUserFromRepo.Gender.ToLower() == "male" ? "female" : "male";
+            }
+            var users = await datingRepository.GetUSers(userParams);
             var usersToReturn = mapper.Map<IEnumerable<UserForDetailsDto>>(users);
+
+            Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages); //extension
+
             return Ok(usersToReturn);
         }
 
@@ -46,7 +58,7 @@ namespace DatingApp.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto user)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            if (id != GetCurrentUserId())
             {
                 return Unauthorized();
             }
@@ -60,6 +72,11 @@ namespace DatingApp.API.Controllers
             }
 
             throw new Exception($"Updating user '{id}' failed on Save !");
+        }
+
+        private int GetCurrentUserId()
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
     }
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
+import { PaginatedResult } from '../_models/pagination';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +14,23 @@ export class UserService {
 
   constructor(private http: HttpService) { }
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+  getUsers(pageNumber?: number, pageSize?: number, userParams?): Observable<PaginatedResult<User[]>> {
+
+    let customParams: { key: string, value: string }[] = [];
+    if (userParams != null) {
+      customParams = [];
+      customParams.push({ key: 'minAge', value: userParams.minAge.toString() });
+      customParams.push({ key: 'maxAge', value: userParams.maxAge.toString() });
+      customParams.push({ key: 'gender', value: userParams.gender.toString() });
+      customParams.push({ key: 'orderBy', value: userParams.orderBy.toString() });
+    }
+
+    const result = this.http.getPaginatedResults<User[]>(this.baseUrl, pageNumber, pageSize, customParams);
+    return result;
   }
 
   getUser(userId: number): Observable<User> {
-    console.log("Logged Output: : UserService -> constructor -> userId", userId);
+
     return this.http.get<User>(this.baseUrl + userId);
   }
 

@@ -1,7 +1,151 @@
-<div class="container mt-5">
+<div class="text-center mt-3">
+  <h2>Your matches - {{ pagination.totalItems }} found</h2>
+</div>
+
+<div class="container mt-3">
+  <!-- Filters -->
+  <div
+    class="btn-group form-inline mb-4"
+    style="width: 33.8em;"
+    dropdown
+    #dropdown="bs-dropdown"
+    [insideClick]="true"
+  >
+    <button
+      id="button-animated"
+      dropdownToggle
+      type="button"
+      class="btn btn-primary dropdown-toggle text-left"
+      aria-controls="dropdown-animated"
+    >
+      Filters<span class="caret"></span>
+    </button>
+    <form
+      #form="ngForm"
+      (ngSubmit)="loadUsersFromService()"
+      id="dropdown-animated"
+      *dropdownMenu
+      class="dropdown-menu"
+      role="menu"
+      style="width: 100%;"
+    >
+      <ul aria-labelledby="button-animated">
+        <li role="menuitem" style="display: inline-block;">
+          <div class="form-group dropdown-item">
+            <label for="minAge">Age From</label>
+            <input
+              type="number"
+              class="form-control ml-1"
+              style="width: 70px;"
+              id="minAge"
+              name="minAge"
+              [(ngModel)]="userParams.minAge"
+            />
+          </div>
+        </li>
+        <li role="menuitem" style="display: inline-block;">
+          <div class="form-group px-2 dropdown-item">
+            <label for="maxAge">Age To</label>
+            <input
+              type="number"
+              class="form-control ml-1"
+              style="width: 70px;"
+              id="maxAge"
+              name="maxAge"
+              [(ngModel)]="userParams.maxAge"
+            />
+          </div>
+        </li>
+        <li role="menuitem" style="display: inline-block;">
+          <div class="form-group px-2 dropdown-item">
+            <label for="gender">Show: </label>
+            <select
+              class="form-control ml-1"
+              style="width: 130px;"
+              id="gender"
+              name="gender"
+              [(ngModel)]="userParams.gender"
+            >
+              <option
+                *ngFor="let gender of genderList"
+                [value]="gender.value"
+                >{{ gender.display }}</option
+              >
+            </select>
+          </div>
+        </li>
+        <div class="d-flex justify-content-center text-center mt-2">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="margin-left: 10px; width: 50%;"
+            (click)="dropdown.hide()"
+          >
+            Apply Filters
+          </button>
+          <button
+            type="button"
+            class="btn btn-info"
+            style="margin-left: 10px; width: 50%;"
+            (click)="initUserParams(); dropdown.hide()"
+          >
+            Reset Filter
+          </button>
+
+          <div class="col">
+            <div class="btn-group">
+              <label
+                class="btn btn-primary mr-1"
+                style="border-radius: 35px;"
+                name="orderBy"
+                [(ngModel)]="userParams.orderBy"
+                btnRadio="lastActive"
+                tabindex="0"
+                role="button"
+                (click)="loadUsersFromService()"
+                >Last Active</label
+              >
+              <label
+                class="btn btn-primary"
+                style="border-radius: 35px;"
+                name="orderBy"
+                [(ngModel)]="userParams.orderBy"
+                btnRadio="created"
+                tabindex="0"
+                role="button"
+                (click)="loadUsersFromService()"
+                >Newest Member</label
+              >
+            </div>
+          </div>
+        </div>
+      </ul>
+    </form>
+  </div>
+  <br />
+
+  <!-- Members Card -->
+
   <div class="row">
     <div class="col-lg-2 col-md-3 col-sm-6" *ngFor="let user of users">
       <app-member-card [user]="user"></app-member-card>
     </div>
   </div>
+</div>
+
+<!-- Pagination -->
+
+<div class="d-flex justify-content-center">
+  <pagination
+    [boundaryLinks]="true"
+    [(ngModel)]="pagination.currentPage"
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;"
+  >
+  </pagination>
 </div>

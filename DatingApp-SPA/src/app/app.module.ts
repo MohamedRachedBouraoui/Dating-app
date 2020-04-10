@@ -1,6 +1,7 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -10,6 +11,8 @@ import { ErrorInterceptor } from './_interceptors/error-interceptor';
 import { NgxGalleryModule } from 'ngx-gallery-9';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -30,7 +33,6 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailsComponent } from './members/member-details/member-details.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
-import { RouterModule, ActivatedRoute } from 'dating-app-spa-win32-x64/resources/app/node_modules/@angular/router/router';
 import { TimeAgoPipe } from './_pipes/time-ago.pipe';
 
 @NgModule({
@@ -55,8 +57,10 @@ import { TimeAgoPipe } from './_pipes/time-ago.pipe';
     HttpClientModule,
     FormsModule, ReactiveFormsModule,
     BrowserAnimationsModule,
+    PaginationModule.forRoot(),
     BsDropdownModule.forRoot(),
     BsDatepickerModule.forRoot(),
+    ButtonsModule.forRoot(),
     AppRoutingModule,
     NgxGalleryModule,
     JwtModule.forRoot({
@@ -71,7 +75,8 @@ import { TimeAgoPipe } from './_pipes/time-ago.pipe';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: CustomHttpHeadersInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: CustomHttpHeadersInterceptor, multi: true },
+    // { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [
     AppComponent
