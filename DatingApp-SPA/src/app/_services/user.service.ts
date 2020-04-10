@@ -14,15 +14,19 @@ export class UserService {
 
   constructor(private http: HttpService) { }
 
-  getUsers(pageNumber?: number, pageSize?: number, userParams?): Observable<PaginatedResult<User[]>> {
+  getUsers(pageNumber?: number, pageSize?: number, userParams?, likesParams?: string): Observable<PaginatedResult<User[]>> {
 
-    let customParams: { key: string, value: string }[] = [];
+    const customParams: { key: string, value: string }[] = [];
     if (userParams != null) {
-      customParams = [];
+
       customParams.push({ key: 'minAge', value: userParams.minAge.toString() });
       customParams.push({ key: 'maxAge', value: userParams.maxAge.toString() });
       customParams.push({ key: 'gender', value: userParams.gender.toString() });
       customParams.push({ key: 'orderBy', value: userParams.orderBy.toString() });
+    }
+
+    if (likesParams != null) { // likesParams can be 'likers' or 'likees'
+      customParams.push({ key: likesParams, value: 'true' });
     }
 
     const result = this.http.getPaginatedResults<User[]>(this.baseUrl, pageNumber, pageSize, customParams);
@@ -44,6 +48,10 @@ export class UserService {
 
   deletePhoto(userId: number, photoId: number): Observable<any> {
     return this.http.delete<any>(this.baseUrl + `${userId}/photos/${photoId}`);
+  }
+
+  sendLike(userId: number, likeeId: number) {
+    return this.http.post(this.baseUrl + `${userId}/like/${likeeId}`, {});
   }
 
 }

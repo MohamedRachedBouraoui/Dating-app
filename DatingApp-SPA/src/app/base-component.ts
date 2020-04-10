@@ -19,5 +19,6 @@ export class BaseComponent {
     this.authService = injector.get(AuthService);
     this.router = injector.get(Router);
 
+
   }
 }
