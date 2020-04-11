@@ -26,30 +26,37 @@ namespace DatingApp.API
         public IConfiguration Configuration { get; }
 
 
-        public void ConfigureDevelopmentServices(IServiceCollection services) //RBO: named by convention of ASP-Core
+        // public void ConfigureDevelopmentServices(IServiceCollection services) //RBO: named by convention of ASP-Core
+        // {
+        //     System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
+        //     services.AddDbContext<DataContext>(options =>
+        //                 {
+        //                     options.UseLazyLoadingProxies(true);
+        //                     options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+        //                 });
+        //     ConfigureServices(services);
+        // }
+
+        // public void ConfigureProductionServices(IServiceCollection services) //RBO: named by convention of ASP-Core                    
+        // {
+        //     System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
+        //     services.AddDbContext<DataContext>(options =>
+        //     {
+        //         options.UseLazyLoadingProxies(true);
+        //         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        //     });
+        //     ConfigureServices(services);
+        // }
+
+        public void ConfigureServices(IServiceCollection services)
         {
-            System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
+
             services.AddDbContext<DataContext>(options =>
                         {
                             options.UseLazyLoadingProxies(true);
                             options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
                         });
-            ConfigureServices(services);
-        }
 
-        public void ConfigureProductionServices(IServiceCollection services) //RBO: named by convention of ASP-Core                    
-        {
-            System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseLazyLoadingProxies(true);
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
-            ConfigureServices(services);
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.ReferenceLoopHandling =
