@@ -85,9 +85,10 @@ export class UserService {
     return result;
   }
 
-  markMessageAsRead(userId: number, messageId: number): Observable<Message> {
+  markMessageAsRead(userId: number, messagesIds: number[]): Observable<Message> {
 
-    return this.http.post<Message>(`${this.baseUrl}${userId}/messages/${messageId}/read`, {});
+    const ids = messagesIds.join(',');
+    return this.http.post<Message>(`${this.baseUrl}${userId}/messages/read/${ids}`, {});
 
   }
 

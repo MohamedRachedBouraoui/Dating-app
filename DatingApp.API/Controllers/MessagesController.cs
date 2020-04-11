@@ -140,24 +140,29 @@ namespace DatingApp.API.Controllers
             throw new Exception("Error deleting the message !");
         }
 
-        [HttpPost("{messageId}/read")]
-        public async Task<IActionResult> MarkMessageAsRead(int userId, int messageId)
+        [HttpPost("read/{messagesIds}")]
+        public async Task<IActionResult> MarkMessageAsRead(int userId, string messagesIds)
         {
             if (userId != GetCurrentUserId())
             {
                 return Unauthorized();
             }
 
-            var messageFromRepo = await datingRepository.GetMessage(messageId);
+            var msgsIds = messagesIds.Split(',');
+            var messagesFromRepo = new List<Message>();
 
-            if (messageFromRepo.RecipientId != userId)
+            foreach (var msgId in msgsIds)
             {
-                return Unauthorized();// a user can only mark messages he recieved as read
+                var messageFromRepo = await datingRepository.GetMessage(int.Parse(msgId));
+
+                if (messageFromRepo.RecipientId != userId)
+                {
+                    return Unauthorized();// a user can only mark messages he recieved as read
+                }
+                messageFromRepo.IsRead = true;
+                messageFromRepo.ReadOn = DateTime.Now;
+                messagesFromRepo.Add(messageFromRepo);
             }
-
-            messageFromRepo.IsRead = true;
-            messageFromRepo.ReadOn= DateTime.Now;
-
 
             if (await datingRepository.SaveAll())
             {
@@ -166,5 +171,7 @@ namespace DatingApp.API.Controllers
 
             throw new Exception("Error Mark Read message !");
         }
+
+
     }
 }

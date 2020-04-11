@@ -60,7 +60,7 @@ export class MessagesComponent extends BaseComponent implements OnInit {
   markMessageAsRead(message: Message): void {
     const userId = this.authService.getLoggedInUser().id;
 
-    this.userService.markMessageAsRead(userId, message.id).subscribe(() => {
+    this.userService.markMessageAsRead(userId, [message.id]).subscribe(() => {
       this.alertify.success('Message is marked as Read');
 
       this.loadMessages();
