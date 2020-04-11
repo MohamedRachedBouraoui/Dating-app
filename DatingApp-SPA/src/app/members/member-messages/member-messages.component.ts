@@ -32,8 +32,9 @@ export class MemberMessagesComponent extends BaseComponent implements OnInit {
           const msgsIds = msgs.filter(m => {
             return m.recipientId === loggedUserId && m.isRead === false;
           }).map(m => m.id);
-
-          this.userService.markMessageAsRead(loggedUserId, msgsIds).subscribe();
+          if (msgsIds.length > 0) {
+            this.userService.markMessageAsRead(loggedUserId, msgsIds).subscribe();
+          }
 
         })
       )

@@ -1,5 +1,3 @@
-using System.Net;
-using System.Text;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
@@ -13,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Text;
 
 namespace DatingApp.API
 {
@@ -25,13 +25,31 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+
+        public void ConfigureDevelopmentServices(IServiceCollection services) //RBO: named by convention of ASP-Core
         {
+            System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
+            services.AddDbContext<DataContext>(options =>
+                        {
+                            options.UseLazyLoadingProxies(true);
+                            options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                        });
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services) //RBO: named by convention of ASP-Core                    
+        {
+            System.Diagnostics.Debug.WriteLine("ConfigureDevelopmentServices");
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies(true);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            ConfigureServices(services);
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.ReferenceLoopHandling =
@@ -90,16 +108,28 @@ namespace DatingApp.API
 
             app.UseRouting();
 
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
             app.UseAuthentication();
 
             app.UseAuthorization();
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+
+            app.UseStaticFiles();
+            app.UseDefaultFiles(); //exple: index.html
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "SpaFallback");
+                // if the request URL is not for our api then route to index action in SpaFallbackController
             });
+            //handle client side routes
+            //app.Run(async (context) =>
+            //{
+            //    //context.Response.ContentType = "text/html";
+            //    await context.Response.SendFileAsync(Path.Combine(env.WebRootPath, "index.html"));
+            //});
         }
     }
 }
