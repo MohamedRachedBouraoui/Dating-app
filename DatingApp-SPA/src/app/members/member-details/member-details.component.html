@@ -36,7 +36,7 @@
               <button class="btn btn-primary w-100 mr-1">
                 <i class="fa fa-heartbeat" aria-hidden="true"></i> Like
               </button>
-              <button class="btn btn-success w-100">
+              <button class="btn btn-success w-100" (click)="selectMsgTab()">
                 <i class="fa fa-skype" aria-hidden="true"></i> Message
               </button>
             </div>
@@ -47,8 +47,8 @@
 
     <!-- Details -->
     <div class="col-sm-8">
-      <div class="tab-panel">
-        <tabset class="member-tabset">
+      <div class="tab-panel" style="height: 100%;">
+        <tabset #memberTabs class="member-tabset">
           <tab heading="About {{ user.knownAs }}">
             <h4>Description</h4>
             <p>{{ user.introduction }}</p>
@@ -65,8 +65,8 @@
               [images]="galleryImages"
             ></ngx-gallery>
           </tab>
-          <tab heading="Messages">
-            <p>Messages here</p>
+          <tab heading="Messages" style="height: 38em;">
+            <app-member-messages [recipientId]="user.id"></app-member-messages>
           </tab>
         </tabset>
       </div>

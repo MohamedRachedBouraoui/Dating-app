@@ -34,6 +34,7 @@ import { MemberDetailsComponent } from './members/member-details/member-details.
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { TimeAgoPipe } from './_pipes/time-ago.pipe';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { TimeAgoPipe } from './_pipes/time-ago.pipe';
     MemberDetailsComponent,
     MemberEditComponent,
     PhotoEditorComponent,
-    TimeAgoPipe
+    TimeAgoPipe,
+    MemberMessagesComponent
 
   ],
   imports: [

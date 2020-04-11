@@ -1,3 +1,120 @@
-<p>
-  messages works!
-</p>
+<div class="container mt-5">
+  <!-- Unread/Inbox/Outbox -->
+  <div class="row">
+    <div class="btn-group">
+      <button
+        class="btn btn-primary"
+        [(ngModel)]="messageContainer"
+        btnRadio="Unread"
+        (click)="loadMessages()"
+      >
+        <i class="fa fa-envelope"></i> Unread
+      </button>
+      <button
+        class="btn btn-primary"
+        [(ngModel)]="messageContainer"
+        btnRadio="Inbox"
+        (click)="loadMessages()"
+      >
+        <i class="fa fa-envelope-open"></i> Inbox
+      </button>
+      <button
+        class="btn btn-primary"
+        [(ngModel)]="messageContainer"
+        btnRadio="Outbox"
+        (click)="loadMessages()"
+      >
+        <i class="fa fa-paper-plane"></i> Outbox
+      </button>
+    </div>
+  </div>
+
+  <!-- No messages -->
+  <div class="row" *ngIf="messages.length == 0">
+    <h3>No messages</h3>
+  </div>
+
+  <!-- Messages table -->
+  <div class="row table-row" *ngIf="messages.length > 0">
+    <table class="table table-hover" style="cursor: pointer;">
+      <!-- headers -->
+      <tr>
+        <th style="width: 10%; text-align: center;">
+          {{ messageContainer === "Outbox" ? "To" : "From" }}
+        </th>
+        <th style="width: 60%;">Message</th>
+        <th style="width: 20%; text-align: center;">
+          {{ messageContainer === "Outbox" ? "Sent" : "Received" }}
+        </th>
+        <th style="width: 10%;"></th>
+      </tr>
+      <!-- Table lines -->
+      <tr
+        *ngFor="let message of messages"
+        [routerLink]="[
+          '/members',
+          messageContainer == 'Outbox' ? message.recipientId : message.senderId
+        ]"
+        [queryParams]="{ tab: 'messages' }"
+      >
+        <td>
+          <div *ngIf="messageContainer != 'Outbox'" style="text-align: center;">
+            <img
+              src="{{ message.senderPhotoUrl }}"
+              class="img-circle rounded-circle"
+            />
+            <strong>{{ message.senderKnownAs }}</strong>
+          </div>
+          <div *ngIf="messageContainer == 'Outbox'">
+            <img
+              src="{{ message.recipientPhotoUrl }}"
+              class="img-circle rounded-circle"
+            />
+            <strong>{{ message.recipientKnownAs }}</strong>
+          </div>
+        </td>
+
+        <td>{{ message.content }}</td>
+
+        <td style="text-align: center;">
+          {{ message.sentOn | date | time_ago }}
+        </td>
+        <td>
+          <!-- stop propagation : because we have 'router link in the parent tr and we don't want to go th other page while deleting' -->
+          <div class="btn-group">
+            <button
+              class="btn btn-success mr-2"
+              (click)="$event.stopPropagation()"
+              (click)="markMessageAsRead(message)"
+              *ngIf="messageContainer == 'Unread'"
+            >
+              MAS
+            </button>
+            <button
+              class="btn btn-danger"
+              (click)="$event.stopPropagation()"
+              (click)="deleteMessage(message)"
+            >
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center">
+  <pagination
+    [boundaryLinks]="true"
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;"
+  >
+  </pagination>
+</div>

@@ -26,7 +26,6 @@ export class HttpService {
   getPaginatedResults<T>(url: string, pageNumber?: number, pageSize?: number, customHttpParams?: { key: string, value: string }[])
     : Observable<PaginatedResult<T>> {
 
-    console.log("Logged Output: : HttpService -> constructor -> customHttpParams", customHttpParams);
     let params = new HttpParams();
     if (pageNumber != null) {
       params = params.append('pageNumber', pageNumber.toString());
@@ -39,12 +38,11 @@ export class HttpService {
       customHttpParams.forEach(prm => { params = params.append(prm.key, prm.value); });
     }
 
-
     return this.httpClient.get<T>(this.baseUrl + url, { observe: 'response', params })
       .pipe(
         map(response => {
           const paginatedResult = new PaginatedResult<T>();
-          paginatedResult.result = response.body as T; // Exemple: User[]
+          paginatedResult.result = response.body; // Exemple: User[]
           if (response.headers.get('Pagination') != null) {
             paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
           }

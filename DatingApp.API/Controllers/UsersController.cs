@@ -16,7 +16,7 @@ namespace DatingApp.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [ServiceFilter(typeof(LogUserActivity))]
-    public class UsersController : ControllerBase
+    public class UsersController : SharedController
     {
         private readonly IDatingRepository datingRepository;
         private readonly IMapper mapper;
@@ -76,8 +76,6 @@ namespace DatingApp.API.Controllers
         }
 
 
-
-
         [HttpPost("{id}/like/{likeeId}")]
         public async Task<IActionResult> AddLike(int id, int likeeId)
         {
@@ -113,15 +111,5 @@ namespace DatingApp.API.Controllers
             }
             return BadRequest("Failed to like user !");
         }
-        private bool CheckIfUserIsLogged(int id)
-        {
-            return id == GetCurrentUserId();
-        }
-
-        private int GetCurrentUserId()
-        {
-            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        }
-
     }
 }

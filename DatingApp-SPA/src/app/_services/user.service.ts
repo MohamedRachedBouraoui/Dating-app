@@ -3,7 +3,7 @@ import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { PaginatedResult } from '../_models/pagination';
-import { HttpParams } from '@angular/common/http';
+import { Message } from '../_models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +52,43 @@ export class UserService {
 
   sendLike(userId: number, likeeId: number) {
     return this.http.post(this.baseUrl + `${userId}/like/${likeeId}`, {});
+  }
+
+  getMessages(id: number, pageNumber?, pageSize?, messageContainer?): Observable<PaginatedResult<Message[]>> {
+
+    const customParams: { key: string, value: string }[] = [];
+
+    if (messageContainer != null) {
+
+      customParams.push({ key: 'messageContainer', value: messageContainer });
+    }
+
+    const result = this.http.getPaginatedResults<Message[]>(`${this.baseUrl}${id}/messages`, pageNumber, pageSize, customParams);
+    return result;
+  }
+
+  getMessageThread(senderId: number, recipientId: number): Observable<Message[]> {
+
+    const result = this.http.get<Message[]>(`${this.baseUrl}${senderId}/messages/thread/${recipientId}`);
+    return result;
+  }
+
+  sendMessage(senderId: number, message: Message): Observable<Message> {
+
+    const result = this.http.post<Message>(`${this.baseUrl}${senderId}/messages/`, message);
+    return result;
+  }
+
+  deleteMessage(userId: number, messageId: number): Observable<Message> {
+
+    const result = this.http.post<Message>(`${this.baseUrl}${userId}/messages/${messageId}`, {});
+    return result;
+  }
+
+  markMessageAsRead(userId: number, messageId: number): Observable<Message> {
+
+    return this.http.post<Message>(`${this.baseUrl}${userId}/messages/${messageId}/read`, {});
+
   }
 
 }

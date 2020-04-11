@@ -1,8 +1,9 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/user';
 import { BaseComponent } from 'src/app/base-component';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery-9';
+import { TabsetComponent } from 'ngx-bootstrap/tabs/public_api';
 
 @Component({
   selector: 'app-member-details',
@@ -10,6 +11,8 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-details.component.css']
 })
 export class MemberDetailsComponent extends BaseComponent implements OnInit {
+
+  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
 
   user: User;
   get userPhotUrl(): string {
@@ -31,7 +34,18 @@ export class MemberDetailsComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     this.loadUser();
+    this.subscribeToMessageTabSelect();
     this.setupGallery();
+  }
+
+  subscribeToMessageTabSelect() {
+    this.activatedRout.queryParams.subscribe(params => {
+
+      const selectedTab = params.tab;
+      if (selectedTab === 'messages') {
+        this.selectMsgTab();
+      }
+    });
   }
 
   setupGallery() {
@@ -69,5 +83,9 @@ export class MemberDetailsComponent extends BaseComponent implements OnInit {
     }, error => {
       this.alertify.error(error);
     });
+  }
+
+  selectMsgTab(): void {
+    this.memberTabs.tabs[3].active = true;
   }
 }
