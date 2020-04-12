@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    //[Authorize] // we use identity and user authenticated policy
     [ApiController]
     [Route("api/[controller]")]
     [ServiceFilter(typeof(LogUserActivity))]
@@ -34,13 +34,13 @@ namespace DatingApp.API.Controllers
             var currentUserId = GetCurrentUserId();
             userParams.UserId = currentUserId;
 
-            var currentUserFromRepo = await datingRepository.GetUser(currentUserId);
+            var currentUserFromRepo = await datingRepository.GetUser(currentUserId, IsCurrentUser(currentUserId));
 
             if (string.IsNullOrWhiteSpace(userParams.Gender)) //filter with gender
             {
                 userParams.Gender = currentUserFromRepo.Gender.ToLower() == "male" ? "female" : "male";
             }
-            var users = await datingRepository.GetUSers(userParams);
+            var users = await datingRepository.GetUsers(userParams);
             var usersToReturn = mapper.Map<IEnumerable<UserForDetailsDto>>(users);
 
             Response.AddPagination(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages); //extension
@@ -50,8 +50,9 @@ namespace DatingApp.API.Controllers
 
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
-        {
-            var user = await datingRepository.GetUser(id);
+        {            
+
+            var user = await datingRepository.GetUser(id, IsCurrentUser(id));
             var userToReturn = mapper.Map<UserForDetailsDto>(user);
             return Ok(userToReturn);
         }
@@ -64,7 +65,7 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await datingRepository.GetUser(id);
+            var userFromRepo = await datingRepository.GetUser(id, IsCurrentUser(id));
 
             mapper.Map(user, userFromRepo);
             if (await datingRepository.SaveAll())
@@ -91,7 +92,7 @@ namespace DatingApp.API.Controllers
                 return BadRequest("You already like this user");
             }
 
-            if (await datingRepository.GetUser(likeeId) == null)
+            if (await datingRepository.GetUser(likeeId, IsCurrentUser(likeeId)) == null)
             {
                 return NotFound();
             }

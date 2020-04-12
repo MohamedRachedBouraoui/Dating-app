@@ -19,7 +19,7 @@ export class AppComponent extends BaseComponent implements OnInit {
 
     const user: User = this.authService.getLoggedInUser();
     if (user) {
-      this.authService.changeMemeberPhoto(user.photoUrl);
+      this.authService.changeMemberPhoto(user.photoUrl);
     }
   }
 

@@ -16,7 +16,7 @@ namespace DatingApp.API.Helpers
             var userId = int.Parse(resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var datingRepo = resultContext.HttpContext.RequestServices.GetService<IDatingRepository>();
 
-            var user = await datingRepo.GetUser(userId);
+            var user = await datingRepo.GetUser(userId,true);
             user.LastActive = DateTime.Now;
             await datingRepo.SaveAll();
         }

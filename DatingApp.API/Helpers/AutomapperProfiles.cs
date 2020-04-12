@@ -11,11 +11,11 @@ namespace DatingApp.API.Helpers
         {
             #region User Mapping
             CreateMap<User, UserForListDto>()
-              .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.Count > 0 ? src.Photos.First(p => p.IsMain).Url : string.Empty))
+              .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.Any(p => p.IsMain) ? src.Photos.First(p => p.IsMain).Url : string.Empty))
              .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
 
             CreateMap<User, UserForDetailsDto>()
-            .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.Count > 0 ? src.Photos.First(p => p.IsMain).Url : string.Empty))
+            .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.Any(p => p.IsMain) ? src.Photos.First(p => p.IsMain).Url : string.Empty))
              .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.CalculateAge()));
 
             CreateMap<UserForUpdateDto, User>();
@@ -32,8 +32,8 @@ namespace DatingApp.API.Helpers
             #region Message Mapping
             CreateMap<MessageForCreationDto, Message>().ReverseMap();
             CreateMap<Message, MessageToReturnDto>()
-                .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src => src.Sender.Photos.Count > 0 ? src.Sender.Photos.First(p => p.IsMain).Url : string.Empty))
-                .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src => src.Recipient.Photos.Count > 0 ? src.Recipient.Photos.First(p => p.IsMain).Url : string.Empty));
+                .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src => src.Sender.Photos.Any(p => p.IsMain) ? src.Sender.Photos.First(p => p.IsMain).Url : string.Empty))
+                .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src => src.Recipient.Photos.Any(p => p.IsMain) ? src.Recipient.Photos.First(p => p.IsMain).Url : string.Empty));
             #endregion
         }
 

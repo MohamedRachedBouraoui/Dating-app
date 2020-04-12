@@ -50,7 +50,7 @@ export class PhotoEditorComponent extends BaseComponent implements OnInit {
 
         this.photos.find(p => p.isMain === true).isMain = false; // update the isMain  status for the old main photo
         newMainPhoto.isMain = true;
-        this.authService.changeMemeberPhoto(newMainPhoto.url);
+        this.authService.changeMemberPhoto(newMainPhoto.url);
 
       }, error => {
         this.alertify.error(error);
@@ -113,11 +113,12 @@ export class PhotoEditorComponent extends BaseComponent implements OnInit {
           url: res.url,
           description: res.description,
           dateAdded: res.dateAdded,
-          isMain: res.isMain
+          isMain: res.isMain,
+          isApproved: res.isApproved,
         };
         this.photos.push(photo);
         if (photo.isMain) {
-          this.authService.changeMemeberPhoto(photo.url);
+          this.authService.changeMemberPhoto(photo.url);
         }
       }
     };

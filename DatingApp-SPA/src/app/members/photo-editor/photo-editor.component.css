@@ -3,6 +3,18 @@ img.img-thumbnail {
   min-width: 100px !important;
   margin-bottom: 2px;
 }
+img.img-thumbnail.not-approved {
+  opacity: 0.2;
+}
+
+.img-wrapper {
+  position: relative;
+}
+.img-text {
+  position: absolute;
+  bottom: 30%;
+}
+
 .nv-file-over {
   border: dotted 3px red;
 }

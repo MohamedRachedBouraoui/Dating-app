@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    //[Authorize] // we use identity and user authenticated policy
     [ApiController]
     [ServiceFilter(typeof(LogUserActivity))]
     [Route("api/users/{userId}/[controller]")]
@@ -79,7 +79,7 @@ namespace DatingApp.API.Controllers
         {
             //we are extracting the sender here to be able to map it with automapper and 
             // Get its info back with the newly created message
-            var sender = await datingRepository.GetUser(userId);
+            var sender = await datingRepository.GetUser(userId,IsCurrentUser(userId));
 
             if (sender.Id != GetCurrentUserId())
             {
@@ -88,7 +88,7 @@ namespace DatingApp.API.Controllers
 
             messageForCreationDto.SenderId = userId;
 
-            var recipient = await datingRepository.GetUser(messageForCreationDto.RecipientId);
+            var recipient = await datingRepository.GetUser(messageForCreationDto.RecipientId,IsCurrentUser(messageForCreationDto.RecipientId));
             if (recipient == null)
             {
                 return BadRequest("Could Not find user");

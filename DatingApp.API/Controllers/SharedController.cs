@@ -3,6 +3,7 @@ using System.Security.Claims;
 
 namespace DatingApp.API.Controllers
 {
+
     public class SharedController: ControllerBase
     {
 
@@ -14,6 +15,10 @@ namespace DatingApp.API.Controllers
         protected int GetCurrentUserId()
         {
             return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        } 
+        protected bool IsCurrentUser(int id)
+        {
+            return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)==id;
         }
 
     }

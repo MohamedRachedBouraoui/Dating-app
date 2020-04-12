@@ -7,6 +7,8 @@ import { environment } from 'src/environments/environment';
 import { HttpService } from './http.service';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
+import { isDefined } from '@angular/compiler/src/util';
+import { isNullOrUndefined } from 'util';
 
 
 
@@ -19,23 +21,46 @@ export class AuthService {
   loggedInUserName: string;
   loggedInUser: User;
 
+
   readonly unknownUserPhoto = '../../assets/unknown-user.png';
 
   photoUrlSubjectBehavior = new BehaviorSubject<string>(this.unknownUserPhoto);
   currentPhotoUrl = this.photoUrlSubjectBehavior.asObservable();
+  loggedInUserRoles: Array<string>;
+
+  getLoggedInUserRoles(): Array<string> {
+
+
+    if (this.loggedInUserRoles === null || this.loggedInUserRoles === undefined) {
+
+      // Role can be a single string or an array of strings
+      const rawRoles = this.jwtService.decodeTokenAndRetrieveInfo(JwtService.USER_ROLES);
+
+      if (rawRoles instanceof Array === false) {
+        this.loggedInUserRoles = [rawRoles];
+      } else {
+        this.loggedInUserRoles = rawRoles;
+      }
+    }
+
+    this.loggedInUserRoles = this.loggedInUserRoles.map(r => r = r.toLowerCase());
+
+    return this.loggedInUserRoles;
+  }
 
   constructor(private http: HttpService,
     private jwtService: JwtService) { }
 
 
-  changeMemeberPhoto(photoUrl: string): void {
+  changeMemberPhoto(photoUrl: string): void {
+
     if (photoUrl === undefined || photoUrl === null || photoUrl === '') {
       photoUrl = this.unknownUserPhoto;
     }
     this.photoUrlSubjectBehavior.next(photoUrl);
     this.getLoggedInUser().photoUrl = photoUrl;
 
-    localStorage.setItem('user', JSON.stringify(this.getLoggedInUser()));
+    this.storeLoggedInUser(this.getLoggedInUser());
   }
 
 
@@ -44,14 +69,20 @@ export class AuthService {
       .pipe(
         map((response: any) => {
           if (response) {
-            localStorage.setItem('user', JSON.stringify(response.user));
+
             this.jwtService.saveToken(response.token);
+
+            this.storeLoggedInUser(response.user);
             this.loggedInUser = response.user;
-            this.changeMemeberPhoto(this.loggedInUser.photoUrl);
+
+            this.changeMemberPhoto(this.loggedInUser.photoUrl);
           }
         })
-
       );
+  }
+
+  storeLoggedInUser(user: any) {
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   register(model: any) {
@@ -78,6 +109,23 @@ export class AuthService {
 
   logout() {
     this.loggedInUserName = '';
+    this.loggedInUserRoles = undefined;
+
     this.jwtService.removeToken();
   }
+
+  roleMatch(allowedRoles: string[]): boolean {
+
+    let matchFound = false;
+    const userRoles = this.getLoggedInUserRoles();
+
+    allowedRoles.forEach(role => {
+      if (userRoles.includes(role.toLowerCase())) {
+        matchFound = true;
+        return;
+      }
+    });
+    return matchFound;
+  }
+
 }

@@ -53,6 +53,6 @@ export class MemberEditComponent extends BaseComponent implements OnInit {
 
   updateMainPhoto(photoUrl: string): void {
     this.user.photoUrl = photoUrl;
-    this.authService.changeMemeberPhoto(photoUrl);
+    this.authService.changeMemberPhoto(photoUrl);
   }
 }

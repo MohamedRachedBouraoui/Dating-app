@@ -14,14 +14,13 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+    //[Authorize] // we use identity and user authenticated policy
     [ApiController]
     [Route("api/users/{userId}/photos")]
-    public class PhotosController : ControllerBase
+    public class PhotosController : SharedController
     {
         private readonly IDatingRepository datingRepository;
         private readonly IMapper mapper;
-        private readonly IOptions<CloudinarySettings> cloudinaryConfig;
         private readonly Cloudinary cloudinary;
 
         public PhotosController(IDatingRepository datingRepository,
@@ -30,7 +29,6 @@ namespace DatingApp.API.Controllers
         {
             this.datingRepository = datingRepository;
             this.mapper = mapper;
-            this.cloudinaryConfig = cloudinaryConfig;
 
             Account account = new Account
             {
@@ -55,23 +53,21 @@ namespace DatingApp.API.Controllers
 
             if (file.Length > 0)
             {
-                using (var stream = file.OpenReadStream())
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams()
                 {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation().Width(400).Height(400)
-                        .Crop("fill").Gravity("face")
-                    };
-                    photoUploadResult = cloudinary.Upload(uploadParams);
-                }
+                    File = new FileDescription(file.Name, stream),
+                    Transformation = new Transformation().Width(400).Height(400)
+.Crop("fill").Gravity("face")
+                };
+                photoUploadResult = cloudinary.Upload(uploadParams);
             }
             photoForCreationDto.Url = photoUploadResult.Uri.ToString();
             photoForCreationDto.PublicId = photoUploadResult.PublicId;
 
             var photoToSave = mapper.Map<Photo>(photoForCreationDto);
 
-            var userFromRepo = await datingRepository.GetUser(userId);
+            var userFromRepo = await datingRepository.GetUser(userId,IsCurrentUser(userId));
 
             if (userFromRepo.Photos.Any(u => u.IsMain) == false)
             {
@@ -83,7 +79,7 @@ namespace DatingApp.API.Controllers
             if (await datingRepository.SaveAll())
             {
                 var photoToReturn = mapper.Map<PhotoForReturnDto>(photoToSave);
-                return CreatedAtRoute("GetPhoto", new { userId = userId, photoId = photoToSave.Id }, photoToReturn);
+                return CreatedAtRoute("GetPhoto", new {  userId, photoId = photoToSave.Id }, photoToReturn);
             }
             return BadRequest("Could not add the photo !");
 
@@ -108,7 +104,7 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var user = await datingRepository.GetUser(userId);
+            var user = await datingRepository.GetUser(userId, IsCurrentUser(userId));
 
             if (user.Photos.Any(p => p.Id == photoId) == false)
             {
@@ -148,7 +144,7 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
-            var user = await datingRepository.GetUser(userId);
+            var user = await datingRepository.GetUser(userId, IsCurrentUser(userId));
 
             if (user.Photos.Any(p => p.Id == photoId) == false)
             {

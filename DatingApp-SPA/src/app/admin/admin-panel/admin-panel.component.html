@@ -1,0 +1,17 @@
+<div class="container mt-5">
+  <h2>Admin Panel</h2>
+  <div class="tab-panel">
+    <tabset class="member-tabset">
+      <tab heading="User Management" *appHasRole="['admin']">
+        <div class="container" style="overflow-y: scroll; height: 70vh;">
+          <app-user-management></app-user-management>
+        </div>
+      </tab>
+      <tab heading="Photo Management" *appHasRole="['admin', 'moderator']">
+        <div class="container" style="overflow-y: auto; height: 70vh;">
+          <app-photo-management></app-photo-management>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+</div>

@@ -8,6 +8,7 @@ export class JwtService {
 
   static UNIQUE_NAME = 'unique_name';
   static NAME_ID = 'nameid';
+  static USER_ROLES = 'role';
 
   get token(): any {
     return localStorage.getItem('token');
