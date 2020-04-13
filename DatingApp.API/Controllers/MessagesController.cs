@@ -173,5 +173,19 @@ namespace DatingApp.API.Controllers
         }
 
 
+        [HttpGet("unread-count")]
+        public async Task<IActionResult> GetUnreadMessageCount(int userId)
+        {
+            if (userId != GetCurrentUserId())
+            {
+                return Unauthorized();
+            }
+
+            var messagesCount= await datingRepository.GetUnreadMessagesForLoggedInUser(userId);
+
+            return Ok(messagesCount);
+        }
+
+
     }
 }

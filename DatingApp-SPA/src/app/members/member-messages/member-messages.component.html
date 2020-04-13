@@ -21,7 +21,7 @@
               <strong class="primary-font">{{ message.senderKnownAs }}</strong>
               <small class="text-muted float-right">
                 <i class="fa fa-clock-o pr-1" aria-hidden="true"></i>
-                <span>{{ message.sentOn | date | time_ago }}</span>
+                <span>{{ message.sentOn | date: "medium" | time_ago }}</span>
               </small>
             </div>
             <p>{{ message.content }}</p>
@@ -42,12 +42,12 @@
             <div class="header">
               <small class="text-muted">
                 <i class="fa fa-clock-o pr-1" aria-hidden="true"></i>
-                <span>{{ message.sentOn | date | time_ago }}</span>
+                <span>{{ message.sentOn | date: "medium" | time_ago }}</span>
                 <span *ngIf="!message.isRead" class="text-danger"
                   >(unread)</span
                 >
                 <span *ngIf="message.isRead" class="text-success"
-                  >(read {{ message.sentOn | date | time_ago }})</span
+                  >(read {{ message.sentOn | date: "medium" | time_ago }})</span
                 >
               </small>
               <strong class="primary-font float-right">{{

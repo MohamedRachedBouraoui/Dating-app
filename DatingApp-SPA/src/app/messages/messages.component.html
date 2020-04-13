@@ -77,7 +77,7 @@
         <td>{{ message.content }}</td>
 
         <td style="text-align: center;">
-          {{ message.sentOn | date | time_ago }}
+          {{ message.sentOn | date: "medium" | time_ago }}
         </td>
         <td>
           <!-- stop propagation : because we have 'router link in the parent tr and we don't want to go th other page while deleting' -->

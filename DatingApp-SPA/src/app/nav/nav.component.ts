@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { Router } from '@angular/router';
+import { UserService } from '../_services/user.service';
+import { RealTimeMessagingService } from '../_services/real-time-messaging.service';
+import { Message } from '../_models/message';
 
 @Component({
   selector: 'app-nav',
@@ -10,7 +13,10 @@ import { Router } from '@angular/router';
 })
 export class NavComponent implements OnInit {
 
+  newMessages = 0;
   model: any = {};
+  photoUrl: string;
+
   get loggedInUserName(): string {
     return this.authService.getLoggedInUserName();
   }
@@ -19,15 +25,29 @@ export class NavComponent implements OnInit {
     return this.authService.getLoggedInUser().photoUrl;
   }
 
-  photoUrl: string;
 
   constructor(private authService: AuthService,
     private alertifyService: AlertifyService,
-    private router: Router) { }
+    private userService: UserService,
+    private router: Router,
+    private realTimeMsgService: RealTimeMessagingService) { }
 
   ngOnInit() {
     this.authService.photoUrlSubjectBehavior.subscribe((url: string) => {
       this.photoUrl = url;
+    });
+
+    this.registerForNewMsg();
+  }
+
+  registerForNewMsg() {
+
+    this.realTimeMsgService.onNewMessage().subscribe((msg: Message) => {
+      if (msg === null || msg === undefined) {
+        return;
+      }
+
+      this.newMessages++;
     });
   }
 
@@ -36,6 +56,7 @@ export class NavComponent implements OnInit {
     this.authService.login(this.model).subscribe(
       next => {
         this.alertifyService.success('Logged in.');
+        this.getUnreadMsg();
       },
       error => {
         this.alertifyService.error(error);
@@ -43,6 +64,15 @@ export class NavComponent implements OnInit {
       () => {
         this.router.navigate(['/members']);
       });
+  }
+
+
+  getUnreadMsg() {
+    this.userService.getUnreadMessagesCount(this.authService.getLoggedInUser().id).subscribe(counter => {
+      this.newMessages = counter;
+    }, error => {
+      this.alertifyService.error(error);
+    });
   }
 
   logout(): void {

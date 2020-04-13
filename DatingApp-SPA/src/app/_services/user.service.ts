@@ -10,6 +10,7 @@ import { Message } from '../_models/message';
 })
 export class UserService {
 
+
   baseUrl = 'users/';
 
   constructor(private http: HttpService) { }
@@ -89,7 +90,11 @@ export class UserService {
 
     const ids = messagesIds.join(',');
     return this.http.post<Message>(`${this.baseUrl}${userId}/messages/read/${ids}`, {});
+  }
 
+  getUnreadMessagesCount(userId: number): Observable<number> {
+    const result = this.http.get<number>(`${this.baseUrl}${userId}/messages/unread-count`);
+    return result;
   }
 
 }

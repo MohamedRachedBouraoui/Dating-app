@@ -15,7 +15,12 @@
         <a class="nav-link" [routerLink]="['/lists']">Lists</a>
       </li>
       <li class="nav-item" routerLinkActive="router-link-active">
-        <a class="nav-link" [routerLink]="['/messages']">Messages</a>
+        <a class="nav-link" [routerLink]="['/messages']"
+          >Messages
+          <span *ngIf="newMessages > 0" class="newMsgCounter">{{
+            newMessages
+          }}</span>
+        </a>
       </li>
 
       <li

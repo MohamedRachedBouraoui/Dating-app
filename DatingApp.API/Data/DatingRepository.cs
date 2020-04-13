@@ -96,6 +96,16 @@ namespace DatingApp.API.Data
             return photo;
         }
 
+        public async Task<int> GetUnreadMessagesForLoggedInUser(int userId)
+        {
+            var unreadMsgCount= await context.Messages
+                .Where(u => u.RecipientId == userId  && u.IsRead == false && u.RecipientDeleted == false)
+                .OrderByDescending(m => m.SentOn)
+                .CountAsync();
+
+            return unreadMsgCount;
+        }
+
         public async Task<User> GetUser(int id,bool isCurrentUser)
         {
 

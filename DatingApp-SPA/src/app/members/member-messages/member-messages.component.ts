@@ -4,6 +4,7 @@ import { BaseComponent } from 'src/app/base-component';
 import { Message } from 'src/app/_models/message';
 import { UserService } from 'src/app/_services/user.service';
 import { tap } from 'rxjs/operators';
+import { RealTimeMessagingService } from 'src/app/_services/real-time-messaging.service';
 
 @Component({
   selector: 'app-member-messages',
@@ -16,12 +17,37 @@ export class MemberMessagesComponent extends BaseComponent implements OnInit {
   messages: Message[];
   newMessage: any = {};
 
-  constructor(private injector: Injector, private userService: UserService) {
+
+  constructor(private injector: Injector, private userService: UserService, private realTimeMsgService: RealTimeMessagingService) {
     super(injector);
   }
 
   ngOnInit() {
+    this.registerForNewMsg();
+    // this.registerForMsgIsRead();
+    // this.registerForAllMsgsAreRead();
+
     this.loadMessages();
+  }
+
+  registerForAllMsgsAreRead() {
+    throw new Error("Method not implemented.");
+  }
+
+  registerForMsgIsRead() {
+    throw new Error("Method not implemented.");
+  }
+
+  registerForNewMsg() {
+
+    this.realTimeMsgService.onNewMessage().subscribe((msg: Message) => {
+      if (msg === null || msg === undefined || this.messages === null || this.messages === undefined) {
+        return;
+      }
+      msg.isRead = true;
+      msg.readOn = new Date();
+      this.messages.unshift(msg);
+    });
   }
 
   loadMessages() {
@@ -54,6 +80,7 @@ export class MemberMessagesComponent extends BaseComponent implements OnInit {
     this.userService.sendMessage(senderId, this.newMessage).subscribe((msg: Message) => {
       this.messages.unshift(msg);
       this.newMessage.content = '';
+      this.realTimeMsgService.sendNewMessage(msg);
     }, error => {
       this.alertify.error(error);
     }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
+using DatingApp.API.Hubs;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -55,7 +56,7 @@ namespace DatingApp.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            ConfigureCors(services);
 
             ConfigureIdentity(services);
             ConfigureAuthentication(services);
@@ -71,6 +72,26 @@ namespace DatingApp.API
             ConfigureAutoMapper(services);
 
             ConfigureCloudinary(services);
+
+            ConfigureSignlR(services);
+        }
+
+        private static void ConfigureCors(IServiceCollection services)
+        {
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+        }
+
+        private void ConfigureSignlR(IServiceCollection services)
+        {
+            services.AddSignalR();
         }
 
         private void ConfigureAuthorization(IServiceCollection services)
@@ -190,22 +211,26 @@ namespace DatingApp.API
 
             app.UseRouting();
 
+           /// app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("CorsPolicy");
+
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 
             app.UseStaticFiles();
             app.UseDefaultFiles(); //exple: index.html
 
+            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapFallbackToController("Index", "SpaFallback");
-                // if the request URL is not for our api then route to index action in SpaFallbackController
-            });
+                endpoints.MapHub<MessagingHub>("/messaging");
+            //endpoints.MapFallbackToController("Index", "SpaFallback");
+            // if the request URL is not for our api then route to index action in SpaFallbackController
+        });
             //handle client side routes
             //app.Run(async (context) =>
             //{
