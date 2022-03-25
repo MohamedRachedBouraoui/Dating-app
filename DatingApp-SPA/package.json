@@ -29,7 +29,7 @@
     "alertifyjs": "^1.13.1",
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
-    "electron": "^8.2.1",
+    "electron": "^13.6.6",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "ng2-file-upload": "^1.4.0",
